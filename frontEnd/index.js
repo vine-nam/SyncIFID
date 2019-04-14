@@ -17,21 +17,22 @@ var editor = new Vue({
         .post('/DB', {sql: this.query})
         .then(response => (
           this.info = response.data.root
-        ))
-    },
-    codeArea: function() {
-      console.log("ss");
+          ), (error) => { 
+            console.log(error)
+            this.info = error
+          }
+        )
     },
     defaultBtn: function() {
       this.query = 'SELECT * FROM TB_C_IFINFO '
     },
     useFlagBtn: function() {
-      var sqls = this.query.split(' ')
+      var sqls = this.query.toUpperCase().split(' ')
       for (let i = 0; i < sqls.length; i++) {
-        if(sqls[i].toUpperCase() === '\nWHERE') {
+        if(/(|\n)WHERE/.exec(sqls[i]) ) {
           var str = ''
           for (let j = 0; j < sqls.length; j++) {
-            if(sqls[j].toUpperCase() === '\nWHERE') {
+            if(/(|\n)WHERE/.exec(sqls[j]) ) {
               str += "\nWHERE USE_FLAG = 'Y' "
               if(j !== sqls.length-1 & sqls[j+1] !== "") {
                 str += "\n  AND "
