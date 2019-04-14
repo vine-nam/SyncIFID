@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="kr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>PROJECT 1</title>
+  <link rel="stylesheet" href="highlight/styles/atom-one-light.css">
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+  
+  <header>
+    <h1>기준정보 동기화</h1>
+  </header>
+
+  <main>
+    <div id="editor" class="editor-holder">
+      <div id="optionBtn">
+        <button v-on:click="defaultBtn">RESET</button>
+        <button v-on:click="useFlagBtn">USE_FLAG</button>
+        <button v-on:click="runBtn">▷</button>
+      </div>
+      <textarea v-model="query" autocapitalize="characters" >{{query}}</textarea>
+      <div class="result-box">{{info}}</div>
+    </div>
+  </main>
+
+  
+
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="highlight/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <script src="index.js"></script>
+</body>
+</html>
