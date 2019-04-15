@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pd:ProcessDefinition xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:ns="http://www.tibco.com/namespaces/tnt/plugins/json" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <pd:name>Process Definition (1).process</pd:name>
+    <pd:name>Post IFINFO.process</pd:name>
     <pd:startName>Start</pd:startName>
     <pd:startType>
         <xsd:element name="data">
@@ -11,8 +11,8 @@
             </xsd:complexType>
         </xsd:element>
     </pd:startType>
-    <pd:startX>149</pd:startX>
-    <pd:startY>64</pd:startY>
+    <pd:startX>74</pd:startX>
+    <pd:startY>75</pd:startY>
     <pd:returnBindings>
         <root>
             <response>
@@ -30,16 +30,42 @@
             </xsd:complexType>
         </xsd:element>
     </pd:endType>
-    <pd:endX>450</pd:endX>
-    <pd:endY>64</pd:endY>
+    <pd:endX>538</pd:endX>
+    <pd:endY>75</pd:endY>
     <pd:errorSchemas/>
     <pd:processVariables/>
     <pd:targetNamespace>http://xmlns.example.com/1555167746925</pd:targetNamespace>
+    <pd:activity name="Parse JSON">
+        <pd:type>com.tibco.plugin.json.activities.JSONParserActivity</pd:type>
+        <pd:resourceType>ae.activities.JSONParserActivity</pd:resourceType>
+        <pd:x>183</pd:x>
+        <pd:y>75</pd:y>
+        <config>
+            <SchemaType>xsdType</SchemaType>
+            <BadgerfishCheck>false</BadgerfishCheck>
+            <ActivityOutputEditor>
+                <xsd:element name="data">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="sql" type="xsd:string"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </ActivityOutputEditor>
+        </config>
+        <pd:inputBindings>
+            <ns1:ActivityInputClass xmlns:ns1="http://www.tibco.com/namespaces/tnt/plugins/json">
+                <jsonString>
+                    <xsl:value-of select="$Start/data/sql"/>
+                </jsonString>
+            </ns1:ActivityInputClass>
+        </pd:inputBindings>
+    </pd:activity>
     <pd:activity name="Render JSON">
         <pd:type>com.tibco.plugin.json.activities.JSONRenderActivity</pd:type>
         <pd:resourceType>ae.activities.JSONRenderActivity</pd:resourceType>
-        <pd:x>310</pd:x>
-        <pd:y>64</pd:y>
+        <pd:x>406</pd:x>
+        <pd:y>75</pd:y>
         <config>
             <SchemaType>xsdType</SchemaType>
             <BadgerfishCheck>false</BadgerfishCheck>
@@ -70,8 +96,8 @@
     <pd:activity name="SQL Direct">
         <pd:type>com.tibco.plugin.jdbc.JDBCGeneralActivity</pd:type>
         <pd:resourceType>ae.activities.JDBCGeneralActivity</pd:resourceType>
-        <pd:x>202</pd:x>
-        <pd:y>191</pd:y>
+        <pd:x>301</pd:x>
+        <pd:y>75</pd:y>
         <config>
             <timeout>10</timeout>
             <commit>false</commit>
@@ -81,14 +107,14 @@
         <pd:inputBindings>
             <jdbcGeneralActivityInput>
                 <statement>
-                    <xsl:value-of select="$Start/data/sql"/>
+                    <xsl:value-of select="$Parse-JSON/ns:ActivityOutputClass/data/sql"/>
                 </statement>
             </jdbcGeneralActivityInput>
         </pd:inputBindings>
     </pd:activity>
     <pd:transition>
         <pd:from>Start</pd:from>
-        <pd:to>SQL Direct</pd:to>
+        <pd:to>Parse JSON</pd:to>
         <pd:lineType>Default</pd:lineType>
         <pd:lineColor>-16777216</pd:lineColor>
         <pd:conditionType>always</pd:conditionType>
@@ -103,6 +129,13 @@
     <pd:transition>
         <pd:from>SQL Direct</pd:from>
         <pd:to>Render JSON</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Parse JSON</pd:from>
+        <pd:to>SQL Direct</pd:to>
         <pd:lineType>Default</pd:lineType>
         <pd:lineColor>-16777216</pd:lineColor>
         <pd:conditionType>always</pd:conditionType>

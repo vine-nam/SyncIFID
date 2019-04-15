@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pd:ProcessDefinition xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:ns="http://www.tibco.com/namespaces/tnt/plugins/json" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-    <pd:name>Process Definition.process</pd:name>
+    <pd:name>Main.process</pd:name>
     <pd:startName>HTTP Receiver</pd:startName>
     <pd:startX>0</pd:startX>
     <pd:startY>0</pd:startY>
@@ -8,8 +8,8 @@
     <pd:starter name="HTTP Receiver">
         <pd:type>com.tibco.plugin.http.HTTPEventSource</pd:type>
         <pd:resourceType>httppalette.httpEventSource</pd:resourceType>
-        <pd:x>113</pd:x>
-        <pd:y>85</pd:y>
+        <pd:x>85</pd:x>
+        <pd:y>90</pd:y>
         <config>
             <outputMode>String</outputMode>
             <defaultEncoding>UTF8</defaultEncoding>
@@ -37,27 +37,27 @@
         <pd:inputBindings/>
     </pd:starter>
     <pd:endName>End</pd:endName>
-    <pd:endX>450</pd:endX>
-    <pd:endY>64</pd:endY>
+    <pd:endX>417</pd:endX>
+    <pd:endY>90</pd:endY>
     <pd:errorSchemas/>
     <pd:processVariables/>
     <pd:targetNamespace>http://xmlns.example.com/1555166825515</pd:targetNamespace>
     <pd:activity name="REST Dispatch and Reply">
         <pd:type>com.tibco.plugin.json.rest.server.activities.RestAdapterActivity</pd:type>
         <pd:resourceType>rest.activities.RestAdapter</pd:resourceType>
-        <pd:x>284</pd:x>
-        <pd:y>238</pd:y>
+        <pd:x>246</pd:x>
+        <pd:y>98</pd:y>
         <config>
             <eventSource>HTTP Receiver</eventSource>
             <RestService>
                 <InnerService>
                     <ns0:application xmlns:ns0="http://wadl.dev.java.net/2009/02" name="Application">
                         <ns0:resources name="RestService0" base="http://127.0.0.1:3000">
-                            <ns0:resource id="Resource0" path="DB">
+                            <ns0:resource id="Resource0" path="IFID">
                                 <ns0:doc/>
-                                <ns0:method id="Method0" name="POST">
+                                <ns0:method id="getIFID" name="GET">
                                     <ns0:doc/>
-                                    <Binding process="/Process Definition (1).process">
+                                    <Binding process="/Get IFINFO.process">
                                         <RESTResponseHeader>
                                             <xsd:element name="Headers">
                                                 <xsd:complexType>
@@ -86,11 +86,49 @@
                                             <xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:ns="http://www.tibco.com/namespaces/tnt/plugins/json" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
                                                 <data>
                                                     <sql>
-                                                        <xsl:value-of select="$Parse-JSON/ns:ActivityOutputClass/data/sql"/>
+                                                        <xsl:value-of select="$HTTP-Receiver/ProcessStarterOutput/QueryString"/>
                                                     </sql>
                                                 </data>
                                             </xsl:template>
                                         </Input-Binding>
+                                    </Binding>
+                                </ns0:method>
+                                <ns0:method id="postIFID" name="POST">
+                                    <ns0:doc/>
+                                    <Binding process="/Post IFINFO.process">
+                                        <RESTResponseHeader>
+                                            <xsd:element name="Headers">
+                                                <xsd:complexType>
+                                                    <xsd:sequence>
+                                                        <xsd:element name="StatusLine" type="xsd:string" minOccurs="0"/>
+                                                        <xsd:element name="Content-Type" type="xsd:string" minOccurs="0"/>
+                                                        <xsd:element name="Location" type="xsd:string" minOccurs="0"/>
+                                                        <xsd:element name="Set-Cookie" type="xsd:string" minOccurs="0"/>
+                                                        <xsd:element name="Pragma" type="xsd:string" minOccurs="0"/>
+                                                    </xsd:sequence>
+                                                </xsd:complexType>
+                                            </xsd:element>
+                                        </RESTResponseHeader>
+                                        <Input-Binding xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:ns="http://www.tibco.com/namespaces/tnt/plugins/json" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+                                            <xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:ns="http://www.tibco.com/namespaces/tnt/plugins/json" xmlns:xsd="http://www.w3.org/2001/XMLSchema" match="/*">
+                                                <data>
+                                                    <sql>
+                                                        <xsl:value-of select="$HTTP-Receiver/ProcessStarterOutput/PostData"/>
+                                                    </sql>
+                                                </data>
+                                            </xsl:template>
+                                        </Input-Binding>
+                                        <Output-Binding xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:ns="http://www.tibco.com/namespaces/tnt/plugins/json" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                                            <xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:ns="http://www.tibco.com/namespaces/tnt/plugins/json" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" match="/*">
+                                                <RESTResponse>
+                                                    <xsl:if test="$End/root/response">
+                                                        <asciiContent>
+                                                            <xsl:value-of select="$End/root/response"/>
+                                                        </asciiContent>
+                                                    </xsl:if>
+                                                </RESTResponse>
+                                            </xsl:template>
+                                        </Output-Binding>
                                     </Binding>
                                 </ns0:method>
                             </ns0:resource>
@@ -107,35 +145,9 @@
             </ns:ActivityInputClass>
         </pd:inputBindings>
     </pd:activity>
-    <pd:activity name="Parse JSON">
-        <pd:type>com.tibco.plugin.json.activities.JSONParserActivity</pd:type>
-        <pd:resourceType>ae.activities.JSONParserActivity</pd:resourceType>
-        <pd:x>163</pd:x>
-        <pd:y>192</pd:y>
-        <config>
-            <SchemaType>xsdType</SchemaType>
-            <BadgerfishCheck>false</BadgerfishCheck>
-            <ActivityOutputEditor>
-                <xsd:element name="data">
-                    <xsd:complexType>
-                        <xsd:sequence>
-                            <xsd:element name="sql" type="xsd:string"/>
-                        </xsd:sequence>
-                    </xsd:complexType>
-                </xsd:element>
-            </ActivityOutputEditor>
-        </config>
-        <pd:inputBindings>
-            <ns:ActivityInputClass>
-                <jsonString>
-                    <xsl:value-of select="$HTTP-Receiver/ProcessStarterOutput/PostData"/>
-                </jsonString>
-            </ns:ActivityInputClass>
-        </pd:inputBindings>
-    </pd:activity>
     <pd:transition>
         <pd:from>HTTP Receiver</pd:from>
-        <pd:to>Parse JSON</pd:to>
+        <pd:to>REST Dispatch and Reply</pd:to>
         <pd:lineType>Default</pd:lineType>
         <pd:lineColor>-16777216</pd:lineColor>
         <pd:conditionType>always</pd:conditionType>
@@ -143,13 +155,6 @@
     <pd:transition>
         <pd:from>REST Dispatch and Reply</pd:from>
         <pd:to>End</pd:to>
-        <pd:lineType>Default</pd:lineType>
-        <pd:lineColor>-16777216</pd:lineColor>
-        <pd:conditionType>always</pd:conditionType>
-    </pd:transition>
-    <pd:transition>
-        <pd:from>Parse JSON</pd:from>
-        <pd:to>REST Dispatch and Reply</pd:to>
         <pd:lineType>Default</pd:lineType>
         <pd:lineColor>-16777216</pd:lineColor>
         <pd:conditionType>always</pd:conditionType>
