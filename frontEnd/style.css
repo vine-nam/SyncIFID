@@ -16,13 +16,14 @@ button {
   border-radius: 5px;
   color: white;
   padding: 5px 10px;
-
+  background: rgb(126, 125, 125);
 }
 
 button:hover {
-  color: cornflowerblue;
   outline: 0;
   border: 0;
+  color: rgb(37, 103, 226);
+  background: rgb(197, 197, 197);
 }
 
 button:focus {
@@ -30,8 +31,13 @@ button:focus {
   border: 0;
 }
 
+p {
+    margin: 10px auto 5px;
+}
+
 textarea {
   width: 400px;
+  height: 200px;
   margin: 10px 0;
   font-family:"Helvetica Neue", Helvetica, sans-serif;
   line-height: 21px;
