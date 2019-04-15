@@ -30,13 +30,32 @@
             <button v-on:click="postBtn">POST LIST</button>
         </div>
       </div>
+
       <textarea v-model="query" autocapitalize="characters" >{{query}}</textarea>
-      <div class="result-box">{{info}}</div>
+      
+      <div id="result-box" >
+        <table>
+          <!-- <thead>
+            <tr>
+              <td v-for="colum in infoColumns">
+                {{ colum }}
+              </td>
+            </tr>
+          </thead> -->
+          <tbody>
+            <tr v-for="info in infoData">
+                <td>{{ info.time }}</td>
+                <td>{{ info.type }}</td>
+                <td class="response">{{ info.response }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </main>
 
 
-
+  
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script src="highlight/highlight.pack.js"></script>
