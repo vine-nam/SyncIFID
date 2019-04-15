@@ -9,7 +9,7 @@
   <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
-  
+
   <header>
     <h1>기준정보 동기화</h1>
   </header>
@@ -18,15 +18,23 @@
     <div id="editor" class="editor-holder">
       <div id="optionBtn">
         <button v-on:click="defaultBtn">RESET</button>
-        <button v-on:click="useFlagBtn">USE_FLAG</button>
-        <button v-on:click="runBtn">▷</button>
+        <div id="whereSql">
+            <p>where 조건</p>
+            <button v-on:click="whereBtn('useFlag')">USE_FLAG</button>
+            <button v-on:click="whereBtn('ifId')">IF_ID</button>
+        </div>
+        <div id="callRest">
+            <p>rest 호출</p>
+            <button v-on:click="getBtn">GET LIST</button>
+            <button v-on:click="postBtn">POST LIST</button>
+        </div>
       </div>
       <textarea v-model="query" autocapitalize="characters" >{{query}}</textarea>
       <div class="result-box">{{info}}</div>
     </div>
   </main>
 
-  
+
 
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
